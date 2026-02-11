@@ -64,6 +64,16 @@
 <p align="center"><strong>Intelligence Report</strong><br /><sub>Typewriter-animated threat assessments</sub></p>
 </td>
 </tr>
+<tr>
+<td width="50%">
+<img src="docs/screenshots/cyber-threats.png" alt="Cyber Threats" width="100%" />
+<p align="center"><strong>Cyber Threats</strong><br /><sub>Live CVE tracking from the National Vulnerability Database</sub></p>
+</td>
+<td width="50%">
+<img src="docs/screenshots/osint-feeds.png" alt="OSINT Feeds" width="100%" />
+<p align="center"><strong>OSINT Feeds</strong><br /><sub>Real-time geopolitical intelligence from GDELT</sub></p>
+</td>
+</tr>
 </table>
 
 </div>
