@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface TypewriterTextProps {
   text: string;
@@ -20,6 +20,8 @@ export default function TypewriterText({
   const [displayText, setDisplayText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
+  const onCompleteRef = useRef(onComplete);
+  onCompleteRef.current = onComplete;
 
   useEffect(() => {
     setDisplayText('');
@@ -36,9 +38,9 @@ export default function TypewriterText({
       return () => clearTimeout(timeout);
     } else if (!isComplete && text.length > 0) {
       setIsComplete(true);
-      onComplete?.();
+      onCompleteRef.current?.();
     }
-  }, [currentIndex, text, speed, onComplete, isComplete]);
+  }, [currentIndex, text, speed, isComplete]);
 
   return (
     <span className={`font-mono ${className}`}>

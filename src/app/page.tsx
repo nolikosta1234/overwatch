@@ -10,6 +10,7 @@ import ParticleField from '@/components/effects/ParticleField';
 import { useNews } from '@/hooks/useApiData';
 import { useThreatEvents } from '@/hooks/useApiData';
 import { ThreatEvent } from '@/lib/api/threats';
+import mapboxgl from 'mapbox-gl';
 import {
   Shield,
   AlertTriangle,
@@ -60,11 +61,16 @@ export default function DashboardPage() {
   const { data: news = [] } = useNews();
   const [mapLoaded, setMapLoaded] = useState(false);
 
+  // Count unique source regions that have active threats
+  const uniqueRegions = new Set(threats.map((t) => `${Math.round(t.lat / 5)},${Math.round(t.lng / 5)}`)).size;
+  // Count active data feeds (threats always present + news if loaded)
+  const activeFeeds = [threats.length > 0, news.length > 0, true /* CVE/NVD */, true /* GDELT */, true /* Mapbox */].filter(Boolean).length;
+
   const stats = {
     activeThreats: threats.length,
     critical: threats.filter((t) => t.severity === 'critical').length,
-    regions: 10,
-    feeds: 8,
+    regions: uniqueRegions,
+    feeds: activeFeeds,
   };
 
   return (
@@ -264,6 +270,11 @@ export default function DashboardPage() {
           </GlassPanel>
 
           <GlassPanel title="RECENT INCIDENTS" titleColor="text-accent-red">
+            <div className="flex justify-end mb-1">
+              <span className="font-mono text-[8px] px-1 py-0.5 rounded bg-accent-yellow/10 text-accent-yellow/70 border border-accent-yellow/20">
+                SIMULATED
+              </span>
+            </div>
             <div className="space-y-2">
               {threats.slice(0, 6).map((threat) => (
                 <div

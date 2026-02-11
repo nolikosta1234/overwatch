@@ -38,13 +38,10 @@ export default function SurveillancePage() {
   const [selectedFlight, setSelectedFlight] = useState<FlightState | null>(null);
   const [mapRef, setMapRef] = useState<mapboxgl.Map | null>(null);
 
-  // Track flights over a large area (US West Coast by default)
-  const { data: flights = [], isLoading } = useFlights({
-    lamin: 36,
-    lomin: -124,
-    lamax: 39,
-    lomax: -120,
-  });
+  // Dynamic bounds from map viewport — wider default view
+  const [bounds, setBounds] = useState({ lamin: 25, lomin: -130, lamax: 50, lomax: -60 });
+
+  const { data: flights = [], isLoading } = useFlights(bounds);
 
   const handleMapLoad = useCallback(
     (map: mapboxgl.Map) => {
@@ -52,6 +49,18 @@ export default function SurveillancePage() {
       if (flights.length > 0) {
         addFlightLayers(map, flights);
       }
+
+      // Update bounds when user pans/zooms
+      map.on('moveend', () => {
+        const b = map.getBounds();
+        if (!b) return;
+        setBounds({
+          lamin: Math.max(-90, b.getSouth()),
+          lomin: Math.max(-180, b.getWest()),
+          lamax: Math.min(90, b.getNorth()),
+          lomax: Math.min(180, b.getEast()),
+        });
+      });
 
       map.on('click', 'flight-points', (e) => {
         if (e.features?.[0]) {
@@ -165,8 +174,8 @@ export default function SurveillancePage() {
       {/* Center - Map */}
       <div className="flex-1 relative">
         <MapContainer
-          center={[-122.4, 37.6]}
-          zoom={8}
+          center={[-95, 38]}
+          zoom={4}
           style={mapStyle}
           className="w-full h-full"
           onMapLoad={handleMapLoad}

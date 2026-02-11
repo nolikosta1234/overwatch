@@ -171,11 +171,16 @@ export default function GeoTrackingPage() {
         {/* Map Overlay */}
         <div className="absolute top-4 left-4 z-20">
           <div className="glass px-4 py-2 rounded-lg">
-            <h2 className="font-mono text-xs text-accent-cyan tracking-wider text-glow-cyan">
-              GEO TRACKING SYSTEM
-            </h2>
+            <div className="flex items-center gap-2">
+              <h2 className="font-mono text-xs text-accent-cyan tracking-wider text-glow-cyan">
+                GEO TRACKING SYSTEM
+              </h2>
+              <span className="font-mono text-[9px] px-1.5 py-0.5 rounded bg-accent-yellow/20 text-accent-yellow border border-accent-yellow/30">
+                SIMULATION
+              </span>
+            </div>
             <p className="font-mono text-[10px] text-text-muted mt-0.5">
-              Real-time target surveillance and geospatial intelligence
+              Simulated target surveillance and geospatial intelligence
             </p>
           </div>
         </div>

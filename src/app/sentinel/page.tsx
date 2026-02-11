@@ -35,22 +35,57 @@ const severityConfig = {
   critical: { color: '#ff3366', label: 'CRITICAL', bg: 'bg-accent-red/10' },
 };
 
+// Keyword categories for article title analysis
+const indicatorKeywords: Record<string, string[]> = {
+  'Military Activity': ['military', 'army', 'troops', 'defense', 'weapons', 'missile', 'nato', 'navy', 'airforce', 'war'],
+  'Cyber Operations': ['cyber', 'hack', 'breach', 'malware', 'ransomware', 'data leak', 'phishing', 'vulnerability'],
+  'Political Stability': ['election', 'protest', 'government', 'coup', 'sanctions', 'diplomacy', 'political', 'opposition'],
+  'Economic Indicators': ['economy', 'trade', 'tariff', 'inflation', 'market', 'gdp', 'recession', 'currency', 'oil'],
+  'Social Unrest': ['protest', 'riot', 'strike', 'unrest', 'demonstration', 'violence', 'civilian', 'refugee'],
+  'Infrastructure': ['infrastructure', 'power grid', 'pipeline', 'transport', 'supply chain', 'energy', 'dam', 'port'],
+  'Maritime Activity': ['maritime', 'naval', 'shipping', 'strait', 'piracy', 'blockade', 'submarine', 'fleet'],
+  'Border Security': ['border', 'migration', 'smuggling', 'trafficking', 'checkpoint', 'territorial', 'incursion'],
+};
+
 function generateSentinelReport(region: ScanRegion, articles: { title: string; domain: string; tone: number }[]): SentinelReport {
-  const severities: SentinelReport['threatLevel'][] = ['low', 'medium', 'high', 'critical'];
-  const threatLevel = severities[Math.floor(Math.random() * 3) + 1] as SentinelReport['threatLevel'];
+  const avgTone = articles.length > 0
+    ? articles.reduce((sum, a) => sum + (a.tone || 0), 0) / articles.length
+    : 0;
+  const uniqueSources = new Set(articles.map((a) => a.domain)).size;
 
-  const categories = [
-    'Military Activity', 'Cyber Operations', 'Political Stability',
-    'Economic Indicators', 'Social Unrest', 'Infrastructure',
-    'Maritime Activity', 'Border Security',
-  ];
+  // Derive threat level from article volume and sentiment
+  let threatLevel: SentinelReport['threatLevel'] = 'low';
+  if (articles.length >= 20 && avgTone < -3) threatLevel = 'critical';
+  else if (articles.length >= 10 && avgTone < -1) threatLevel = 'high';
+  else if (articles.length >= 5 || avgTone < 0) threatLevel = 'medium';
 
-  const indicators = categories.slice(0, 5 + Math.floor(Math.random() * 3)).map((cat) => ({
-    category: cat,
-    level: severities[Math.floor(Math.random() * 4)] as 'low' | 'medium' | 'high' | 'critical',
-    description: `${cat} assessment for ${region.name}`,
-    value: Math.floor(Math.random() * 100),
-  }));
+  // Score each indicator category by keyword hits in article titles
+  const indicators = Object.entries(indicatorKeywords).map(([category, keywords]) => {
+    const matchingArticles = articles.filter((a) =>
+      keywords.some((kw) => a.title.toLowerCase().includes(kw))
+    );
+    const hits = matchingArticles.length;
+    const catTone = matchingArticles.length > 0
+      ? matchingArticles.reduce((s, a) => s + (a.tone || 0), 0) / matchingArticles.length
+      : 0;
+
+    // Score 0-100 based on hit ratio and negativity
+    const hitScore = Math.min(100, (hits / Math.max(articles.length, 1)) * 200);
+    const toneScore = Math.min(100, Math.max(0, (-catTone) * 10));
+    const value = Math.round((hitScore * 0.6 + toneScore * 0.4));
+
+    let level: 'low' | 'medium' | 'high' | 'critical' = 'low';
+    if (value >= 70) level = 'critical';
+    else if (value >= 45) level = 'high';
+    else if (value >= 20) level = 'medium';
+
+    return { category, level, description: `${category} assessment for ${region.name}`, value };
+  }).sort((a, b) => b.value - a.value);
+
+  const topIndicators = indicators.filter((i) => i.value > 0).slice(0, 5);
+  const topConcerns = topIndicators.length > 0
+    ? topIndicators.map((i) => i.category).join(', ')
+    : 'No specific threat categories detected';
 
   const summaryLines = [
     `SENTINEL SCAN COMPLETE — ${region.name.toUpperCase()}`,
@@ -59,16 +94,16 @@ function generateSentinelReport(region: ScanRegion, articles: { title: string; d
     `Scan timestamp: ${new Date().toISOString()}`,
     ``,
     `REGIONAL ANALYSIS:`,
-    `The ${region.name} sector shows ${threatLevel === 'critical' ? 'elevated' : threatLevel === 'high' ? 'notable' : 'moderate'} threat indicators across multiple domains.`,
+    `The ${region.name} sector shows ${threatLevel === 'critical' ? 'elevated' : threatLevel === 'high' ? 'notable' : threatLevel === 'medium' ? 'moderate' : 'baseline'} threat indicators.`,
+    `Analysis based on ${articles.length} intelligence articles from ${uniqueSources} sources.`,
     ``,
     `KEY FINDINGS:`,
-    `• Cyber activity index: ${(Math.random() * 100).toFixed(1)}`,
-    `• Geopolitical tension score: ${(Math.random() * 10).toFixed(1)}/10`,
-    `• Infrastructure vulnerability: ${(['LOW', 'MEDIUM', 'HIGH'])[Math.floor(Math.random() * 3)]}`,
-    `• SIGINT intercept density: ${Math.floor(Math.random() * 500)} events/hr`,
+    `• Average sentiment tone: ${avgTone.toFixed(2)} ${avgTone < -2 ? '(HOSTILE)' : avgTone < 0 ? '(NEGATIVE)' : '(NEUTRAL)'}`,
+    `• Article volume: ${articles.length} ${articles.length >= 15 ? '(HIGH)' : articles.length >= 5 ? '(MODERATE)' : '(LOW)'}`,
+    `• Source diversity: ${uniqueSources} unique outlets`,
+    `• Top concern areas: ${topConcerns}`,
     ``,
     `INTELLIGENCE SOURCES: ${articles.length} articles analyzed`,
-    `Average sentiment tone: ${articles.length > 0 ? (articles.reduce((sum, a) => sum + (a.tone || 0), 0) / articles.length).toFixed(2) : 'N/A'}`,
   ];
 
   return {

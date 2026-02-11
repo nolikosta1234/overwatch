@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import Sidebar from '@/components/layout/Sidebar';
-import Topbar from '@/components/layout/Topbar';
+import MainContent from '@/components/layout/MainContent';
 import Providers from '@/components/layout/Providers';
 
 export const metadata: Metadata = {
@@ -20,12 +20,7 @@ export default function RootLayout({
         <Providers>
           <div className="flex h-screen">
             <Sidebar />
-            <div className="flex-1 flex flex-col ml-56 transition-all duration-300">
-              <Topbar />
-              <main className="flex-1 overflow-hidden relative grid-bg">
-                {children}
-              </main>
-            </div>
+            <MainContent>{children}</MainContent>
           </div>
         </Providers>
       </body>
